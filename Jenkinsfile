@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Clone Repository') {
             steps {
-                git credentialsId: 'github-creds',
+                git branch: 'main',
                     url: 'https://github.com/Viruthebrave/devops-ci-cd-azure.git'
             }
         }
