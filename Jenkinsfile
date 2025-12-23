@@ -2,18 +2,19 @@ pipeline {
     agent any
 
     stages {
-        stage('Clone Repository') {
+        stage('Build Docker Image') {
             steps {
-                git branch: 'main',
-                    url: 'https://github.com/Viruthebrave/devops-ci-cd-azure.git'
+                bat 'docker build -t devops-flask-app:latest .'
             }
         }
 
-        stage('Build Docker Image') {
+        stage('Run Docker Container') {
             steps {
-                script {
-                    docker.build("devops-flask-app:latest")
-                }
+                bat '''
+                docker stop devops_container 2>nul || exit 0
+                docker rm devops_container 2>nul || exit 0
+                docker run -d -p 5000:5000 --name devops_container devops-flask-app:latest
+                '''
             }
         }
     }
